@@ -3,6 +3,7 @@ package main
 import (
 	"aoc-2019/common"
 	"aoc-2019/day1"
+	"aoc-2019/day2"
 	"fmt"
 	"log"
 	"os"
@@ -18,13 +19,19 @@ func main() {
 	}
 
 	inputPath := fmt.Sprintf("day%d/input", day)
-	input, err := common.ReadInputFile(inputPath)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	switch day {
 	case 1:
+		input, err := common.ReadLinesFromInput(inputPath)
+		if err != nil {
+			log.Fatal(err)
+		}
 		day1.Solution(input)
+	case 2:
+		input, err := common.CommaSeparatedIntFromInput(inputPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		day2.Solution(input)
 	}
 }
