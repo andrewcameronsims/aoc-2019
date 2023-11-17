@@ -4,10 +4,12 @@ import (
 	"aoc-2019/common"
 	"aoc-2019/day1"
 	"aoc-2019/day2"
+	"aoc-2019/day3"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -33,5 +35,17 @@ func main() {
 			log.Fatal(err)
 		}
 		day2.Solution(input)
+	case 3:
+		input, err := common.ReadLinesFromInput(inputPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		wires := make([][]string, 2)
+		for i, wire := range input {
+			wires[i] = strings.Split(wire, ",")
+		}
+
+		day3.Solution(wires)
 	}
 }
