@@ -5,6 +5,7 @@ import (
 	"aoc-2019/day1"
 	"aoc-2019/day2"
 	"aoc-2019/day3"
+	"aoc-2019/day4"
 	"fmt"
 	"log"
 	"os"
@@ -47,5 +48,8 @@ func main() {
 		}
 
 		day3.Solution(wires)
+	case 4:
+		input := "147981-691423"
+		day4.Solution(input)
 	}
 }
