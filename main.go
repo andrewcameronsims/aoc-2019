@@ -6,6 +6,7 @@ import (
 	"aoc-2019/day2"
 	"aoc-2019/day3"
 	"aoc-2019/day4"
+	"aoc-2019/day5"
 	"fmt"
 	"log"
 	"os"
@@ -51,5 +52,11 @@ func main() {
 	case 4:
 		input := "147981-691423"
 		day4.Solution(input)
+	case 5:
+		input, err := common.CommaSeparatedIntFromInput(inputPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		day5.Solution(input)
 	}
 }

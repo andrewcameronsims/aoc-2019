@@ -17,7 +17,7 @@ func partOne(prog []int) int {
 	progCopy := make([]int, len(prog))
 	copy(progCopy, prog)
 
-	cpu := &cpu.Computer{progCopy, 0}
+	cpu := cpu.NewComputer(progCopy)
 	cpu.Run()
 
 	return cpu.Memory[0]
@@ -29,7 +29,7 @@ func partTwo(prog []int) int {
 			progCopy := make([]int, len(prog))
 			copy(progCopy, prog)
 
-			cpu := &cpu.Computer{progCopy, 0}
+			cpu := cpu.NewComputer(progCopy)
 			cpu.Memory[1] = i
 			cpu.Memory[2] = j
 
