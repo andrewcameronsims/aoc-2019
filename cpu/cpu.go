@@ -12,8 +12,11 @@ const (
 	Immediate
 )
 
-type IO interface {
+type Reader interface {
 	In() int
+}
+
+type Writer interface {
 	Out(output int)
 }
 
@@ -34,18 +37,36 @@ func (io Interactive) Out(output int) {
 	fmt.Println(output)
 }
 
+type StandardIO struct {
+	Outputs []int
+	Inputs  []int
+}
+
+func (io *StandardIO) In() int {
+	input := io.Inputs[0]
+	io.Inputs = io.Inputs[1:]
+
+	return input
+}
+
+func (io *StandardIO) Out(output int) {
+	io.Outputs = append(io.Outputs, output)
+}
+
 type Computer struct {
 	Memory  []int
 	Pointer int
+	Reader  Reader
+	Writer  Writer
 	cmd     int
 	modes   []mode
-	io      IO
 }
 
 func NewComputer(prog []int) *Computer {
 	return &Computer{
 		Memory: prog,
-		io:     Interactive{},
+		Reader: Interactive{},
+		Writer: Interactive{},
 	}
 }
 
@@ -147,14 +168,14 @@ func (cpu *Computer) eq() {
 
 func (cpu *Computer) in() {
 	addr := cpu.Memory[cpu.Pointer+1]
-	cpu.Memory[addr] = cpu.io.In()
+	cpu.Memory[addr] = cpu.Reader.In()
 
 	cpu.Pointer += 2
 }
 
 func (cpu *Computer) out() {
 	output := cpu.read(cpu.modes[0], cpu.Pointer+1)
-	cpu.io.Out(output)
+	cpu.Writer.Out(output)
 
 	cpu.Pointer += 2
 }

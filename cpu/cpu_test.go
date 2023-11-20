@@ -59,7 +59,7 @@ func TestComputer_Run(t *testing.T) {
 			testIo := TestIO{
 				inputs: []int{tC.input},
 			}
-			cpu := &Computer{io: &testIo, Memory: tC.program}
+			cpu := &Computer{Reader: &testIo, Writer: &testIo, Memory: tC.program}
 			cpu.Run()
 
 			output := testIo.outputs[0]
