@@ -9,6 +9,7 @@ import (
 	"aoc-2019/day5"
 	"aoc-2019/day6"
 	"aoc-2019/day7"
+	"aoc-2019/day8"
 	"fmt"
 	"log"
 	"os"
@@ -34,7 +35,7 @@ func main() {
 		}
 		day1.Solution(input)
 	case 2:
-		input, err := common.CommaSeparatedIntFromInput(inputPath)
+		input, err := common.DelimitedIntFromInput(inputPath, ",")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -55,7 +56,7 @@ func main() {
 		input := "147981-691423"
 		day4.Solution(input)
 	case 5:
-		input, err := common.CommaSeparatedIntFromInput(inputPath)
+		input, err := common.DelimitedIntFromInput(inputPath, ",")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -68,11 +69,18 @@ func main() {
 
 		day6.Solution(input)
 	case 7:
-		input, err := common.CommaSeparatedIntFromInput(inputPath)
+		input, err := common.DelimitedIntFromInput(inputPath, ",")
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		day7.Solution(input)
+	case 8:
+		input, err := common.DelimitedIntFromInput(inputPath, "")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		day8.Solution(input)
 	}
 }

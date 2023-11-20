@@ -18,7 +18,7 @@ func ReadLinesFromInput(path string) ([]string, error) {
 	return lines, nil
 }
 
-func CommaSeparatedIntFromInput(path string) ([]int, error) {
+func DelimitedIntFromInput(path string, delimiter string) ([]int, error) {
 	var ints []int
 
 	bytes, err := os.ReadFile(path)
@@ -27,7 +27,7 @@ func CommaSeparatedIntFromInput(path string) ([]int, error) {
 	}
 
 	trimmed := strings.TrimSpace(string(bytes))
-	numbers := strings.Split(trimmed, ",")
+	numbers := strings.Split(trimmed, delimiter)
 	for _, num := range numbers {
 		n, err := strconv.Atoi(num)
 		if err != nil {
