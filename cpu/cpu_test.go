@@ -53,13 +53,28 @@ func TestComputer_Run(t *testing.T) {
 			input:          9,
 			expectedOutput: 1001,
 		},
+		{
+			desc:           "",
+			program:        []int{1102, 34915192, 34915192, 7, 4, 7, 99, 0},
+			expectedOutput: 1219070632396864,
+		},
+		{
+			desc:           "",
+			program:        []int{104, 1125899906842624, 99},
+			expectedOutput: 1125899906842624,
+		},
+		{
+			desc:           "",
+			program:        []int{109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99},
+			expectedOutput: 109,
+		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			testIo := TestIO{
 				inputs: []int{tC.input},
 			}
-			cpu := &Computer{Reader: &testIo, Writer: &testIo, Memory: tC.program}
+			cpu := &Computer{Reader: &testIo, Writer: &testIo, Memory: append(tC.program, make([]int, 100)...)}
 			cpu.Run()
 
 			output := testIo.outputs[0]

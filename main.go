@@ -10,6 +10,7 @@ import (
 	"aoc-2019/day6"
 	"aoc-2019/day7"
 	"aoc-2019/day8"
+	"aoc-2019/day9"
 	"fmt"
 	"log"
 	"os"
@@ -82,5 +83,12 @@ func main() {
 		}
 
 		day8.Solution(input)
+	case 9:
+		input, err := common.DelimitedIntFromInput(inputPath, ",")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		day9.Solution(input)
 	}
 }

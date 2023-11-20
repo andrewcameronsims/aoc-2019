@@ -10,6 +10,7 @@ type mode int
 const (
 	Position mode = iota
 	Immediate
+	Relative
 )
 
 type Reader interface {
@@ -54,17 +55,20 @@ func (io *StandardIO) Out(output int) {
 }
 
 type Computer struct {
-	Memory  []int
-	Pointer int
-	Reader  Reader
-	Writer  Writer
-	cmd     int
-	modes   []mode
+	Memory   []int
+	Pointer  int
+	Reader   Reader
+	Writer   Writer
+	cmd      int
+	modes    []mode
+	relative int
 }
 
 func NewComputer(prog []int) *Computer {
+	memory := make([]int, 1000)
+
 	return &Computer{
-		Memory: prog,
+		Memory: append(prog, memory...),
 		Reader: Interactive{},
 		Writer: Interactive{},
 	}
@@ -92,6 +96,8 @@ func (cpu *Computer) Run() {
 			cpu.lt()
 		case 8:
 			cpu.eq()
+		case 9:
+			cpu.rel()
 		case 99:
 			return
 		default:
@@ -127,6 +133,13 @@ func (cpu *Computer) jt() {
 	cpu.Pointer += 3
 }
 
+func (cpu *Computer) rel() {
+	offset := cpu.read(cpu.modes[0], cpu.Pointer+1)
+	cpu.relative += offset
+
+	cpu.Pointer += 2
+}
+
 func (cpu *Computer) jf() {
 	cond := cpu.read(cpu.modes[0], cpu.Pointer+1)
 	if cond == 0 {
@@ -147,8 +160,8 @@ func (cpu *Computer) lt() {
 		result = 1
 	}
 
-	addr := cpu.Memory[cpu.Pointer+3]
-	cpu.Memory[addr] = result
+	cpu.write(cpu.modes[2], cpu.Pointer+3, result)
+
 	cpu.Pointer += 4
 }
 
@@ -161,14 +174,14 @@ func (cpu *Computer) eq() {
 		result = 1
 	}
 
-	addr := cpu.Memory[cpu.Pointer+3]
-	cpu.Memory[addr] = result
+	cpu.write(cpu.modes[2], cpu.Pointer+3, result)
+
 	cpu.Pointer += 4
 }
 
 func (cpu *Computer) in() {
-	addr := cpu.Memory[cpu.Pointer+1]
-	cpu.Memory[addr] = cpu.Reader.In()
+	input := cpu.Reader.In()
+	cpu.write(cpu.modes[0], cpu.Pointer+1, input)
 
 	cpu.Pointer += 2
 }
@@ -183,9 +196,8 @@ func (cpu *Computer) out() {
 func (cpu *Computer) add() {
 	left := cpu.read(cpu.modes[0], cpu.Pointer+1)
 	right := cpu.read(cpu.modes[1], cpu.Pointer+2)
-	addrResult := cpu.Memory[cpu.Pointer+3]
 
-	cpu.Memory[addrResult] = left + right
+	cpu.write(cpu.modes[2], cpu.Pointer+3, left+right)
 
 	cpu.Pointer += 4
 }
@@ -193,20 +205,35 @@ func (cpu *Computer) add() {
 func (cpu *Computer) mult() {
 	left := cpu.read(cpu.modes[0], cpu.Pointer+1)
 	right := cpu.read(cpu.modes[1], cpu.Pointer+2)
-	addrResult := cpu.Memory[cpu.Pointer+3]
 
-	cpu.Memory[addrResult] = left * right
+	cpu.write(cpu.modes[2], cpu.Pointer+3, left*right)
 
 	cpu.Pointer += 4
 }
 
+func (cpu *Computer) write(mode mode, addr, value int) {
+	val := cpu.Memory[addr]
+
+	switch mode {
+	case Position:
+		cpu.Memory[val] = value
+	case Relative:
+		cpu.Memory[val+cpu.relative] = value
+	default:
+		panic("unknown mode")
+	}
+}
+
 func (cpu *Computer) read(mode mode, addr int) int {
 	val := cpu.Memory[addr]
+
 	switch mode {
 	case Immediate:
 		return val
 	case Position:
 		return cpu.Memory[val]
+	case Relative:
+		return cpu.Memory[val+cpu.relative]
 	default:
 		panic("unknown mode")
 	}
