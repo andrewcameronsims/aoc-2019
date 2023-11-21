@@ -3,6 +3,7 @@ package main
 import (
 	"aoc-2019/common"
 	"aoc-2019/day1"
+	"aoc-2019/day10"
 	"aoc-2019/day2"
 	"aoc-2019/day3"
 	"aoc-2019/day4"
@@ -90,5 +91,18 @@ func main() {
 		}
 
 		day9.Solution(input)
+	case 10:
+		input, err := common.ReadLinesFromInput(inputPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		runes := make([][]rune, len(input))
+
+		for i := 0; i < len(input); i++ {
+			runes[i] = []rune(input[i])
+		}
+
+		day10.Solution(runes)
 	}
 }
