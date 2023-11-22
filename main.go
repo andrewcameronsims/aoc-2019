@@ -4,6 +4,7 @@ import (
 	"aoc-2019/common"
 	"aoc-2019/day1"
 	"aoc-2019/day10"
+	"aoc-2019/day11"
 	"aoc-2019/day2"
 	"aoc-2019/day3"
 	"aoc-2019/day4"
@@ -104,5 +105,12 @@ func main() {
 		}
 
 		day10.Solution(runes)
+	case 11:
+		input, err := common.DelimitedIntFromInput(inputPath, ",")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		day11.Solution(input)
 	}
 }
